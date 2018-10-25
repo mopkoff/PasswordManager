@@ -1,0 +1,55 @@
+﻿@page
+@model PasswordManager.Pages.LoginModel
+
+<!DOCTYPE html>
+
+<html>
+<body>
+    <h2>Войдите используя форму ниже:</h2>
+    <form method="post">
+        <table class="table" style="border-color:white;" width="300">
+            <tbody>
+                <tr>
+                    <td width="100">
+                        Имя:
+                    </td>
+                    <td>
+                        <input asp-for="loginData.Username" placeholder="Введите имя" />
+                    </td>
+                    <td>
+                        <span asp-validation-for="loginData.Username" class="text-danger"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Пароль:
+                    </td>
+                    <td>
+                        <input asp-for="loginData.Password" placeholder="Введите пароль" />
+                    </td>
+                    <td>
+                        <span asp-validation-for="loginData.Password" class="text-danger" ></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Запомнить меня:
+                    </td>
+                    <td>
+                        <input asp-for="loginData.RememberMe" type="checkbox" />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input type="submit" value="Войти" />
+                        @Html.AntiForgeryToken()
+                    </td>
+                    <td>
+                        <button type="submit" asp-page="Register">Регистрация</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</body>
+</html>

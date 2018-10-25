@@ -1,0 +1,23 @@
+﻿@page "{id:int}"
+@model EditModel
+@{
+    ViewData["Title"] = "Изменение данных  аккаунта";
+}
+<h2>@ViewData["Title"]</h2>
+<form method="POST">
+    <br /><input asp-for="Account.Id" type="hidden" />
+    <br /><input asp-for="Account.UserId" type="hidden" />
+    <div>
+        <label>Сервис:</label><br /><input asp-for="Account.ServiceName" />
+        <span asp-validation-for="Account.ServiceName" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Логин:</label><br /><input asp-for="Account.Login" />
+        <span asp-validation-for="Account.Login" class="text-danger"></span>
+    </div>
+    <div>
+        <label>Пароль:</label><br /><input asp-for="Account.Password" />
+        <span asp-validation-for="Account.Password" class="text-danger"></span>
+    </div>
+    <input type="submit" value="Сохранить" />
+</form>

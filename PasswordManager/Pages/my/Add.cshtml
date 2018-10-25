@@ -1,0 +1,23 @@
+﻿@page
+@model AddModel
+@{
+    ViewData["Title"] = "Добавление нового аккаунта ";
+}
+<h2>@ViewData["Title"]</h2>
+<div asp-validation-summary="All"></div>
+<form method="POST">
+    <div>
+        <label>Сервис:</label><br /><input asp-for="Account.ServiceName" />
+        <span asp-validation-for="Account.ServiceName"></span>
+    </div>
+    <div>
+        <label>Логин:</label><br /><input asp-for="Account.Login" />
+        <span asp-validation-for="Account.Login"></span>
+    </div>
+    <div>
+        <label>Пароль:</label><br /><input asp-for="Account.Password" />
+        <span asp-validation-for="Account.Password"class="text-danger"></span>
+    </div>
+    <<br /><input asp-for="Account.UserId" type="hidden" />
+    <input type="submit" value="Сохранить" />
+</form>

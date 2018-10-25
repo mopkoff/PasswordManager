@@ -1,0 +1,29 @@
+﻿@page
+@model PasswordManager.Pages.RegisterModel
+<!DOCTYPE html>
+
+<html>
+<body>
+    <h2>Зарегистрируйтесь, используя форму ниже:</h2>
+    <form method="POST">
+        <div>
+            <label>Введите имя:</label>
+            <input asp-for="registerData.Username" placeholder="Введите имя" />
+                <span asp-validation-for="registerData.Username" class="text-danger" ></span>
+        </div>
+        <div>
+            <label>Введите пароль:</label>
+            <input asp-for="registerData.Password" placeholder="Введите пароль" />
+            <span asp-validation-for="registerData.Password" class="text-danger" ></span>
+        </div>
+        <div>
+            <label>Подтвердите пароль:</label>
+
+            <input asp-for="registerData.PasswordConfirm" placeholder="Подтвердите пароль" />            
+            <span asp-validation-for="registerData.PasswordConfirm" class="text-danger"></span>
+        </div>
+        <input type="submit" value="Регистрация" />
+        @Html.AntiForgeryToken()
+    </form>
+</body>
+</html>
