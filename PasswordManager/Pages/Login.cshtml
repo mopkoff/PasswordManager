@@ -15,9 +15,9 @@
                     </td>
                     <td>
                         <input asp-for="loginData.Username" placeholder="Введите имя" />
-                    </td>
-                    <td>
-                        <span asp-validation-for="loginData.Username" class="text-danger"></span>
+
+                        <label class="text-danger">@Html.ValidationMessage("ErrorLogin")</label>
+                        <span asp-validation-for="loginData.Username"></span>
                     </td>
                 </tr>
                 <tr>

@@ -6,6 +6,7 @@ using PasswordManager.Model;
 using PasswordManager.Helper;
 using Microsoft.Extensions.Configuration;
 
+using System.Security.Claims;
 namespace PasswordManager.Pages.my
 {
     public class AddModel : PageModel

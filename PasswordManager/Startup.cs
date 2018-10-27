@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PasswordManager.Model;
+using System.Security.Claims;
 
 namespace PasswordManager
 {
