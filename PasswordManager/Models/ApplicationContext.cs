@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PasswordManager.Helper;
 
 namespace PasswordManager.Model
 {
@@ -6,6 +7,7 @@ namespace PasswordManager.Model
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<FailedAccessAttemptCounter> FailedAccessAttemptCounters{ get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

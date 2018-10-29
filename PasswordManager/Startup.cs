@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PasswordManager.Model;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace PasswordManager
 {
@@ -30,13 +31,24 @@ namespace PasswordManager
         {
 
             string connection = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+            int DefaultLockoutTimeSpanMin = Configuration.GetValue<int>("DefaultLockoutTimeSpanMin");
+            int MaxFailedAccessAttempts = Configuration.GetValue<int>("MaxFailedAccessAttempts");
 
+            //add DB context
+            services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
+
+            });
+            services.Configure<IdentityOptions>(options =>
+            {
+                //Block user after N failed acces attempts
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(DefaultLockoutTimeSpanMin);
+                //Determine failed acces attempts
+                options.Lockout.MaxFailedAccessAttempts = MaxFailedAccessAttempts;
 
             });
             services.AddAuthentication(options =>
@@ -73,7 +85,7 @@ namespace PasswordManager
             app.Use(async (context, next) =>
             {
                 //Если обнаружена xss-атака, браузер удалит опасные фрагменты 
-                context.Response.Headers.Add("x-xss-protection", "1");
+                context.Response.Headers.Add("x-xss-protection", "1");                
                 //Разрешение запуска скриптов только с текущего сайта
                 context.Response.Headers.Add("content-security-policy", "script-src 'self'");
                 //Блокировка фреймов
@@ -84,6 +96,7 @@ namespace PasswordManager
                 context.Response.Headers.Add("Referrer-Policy", "no-referrer");
                 //HTTPS only
                 context.Response.Headers.Add("Strict-Transport-Securit", "max-age=31536000; includeSubDomains");
+
                 await next();
             });
             
