@@ -10,6 +10,7 @@ using PasswordManager.Helper;
 using System.Linq;
 using System;
 using Microsoft.Extensions.Configuration;
+using Microsoft.EntityFrameworkCore;
 
 namespace PasswordManager.Pages
 {
@@ -44,15 +45,19 @@ namespace PasswordManager.Pages
             if (ModelState.IsValid)
             {
                 var loggingUser = context.Users.Where(u => (u.Login == loginData.Username)).ToList();
-                var FAAC = context.FailedAccessAttemptCounters.Find(loginData.Username);
-                if (FAAC != null)
-                    if (FAAC.LastFailedAccessAttempt.AddMinutes(DefaultLockoutTimeSpanMin) < DateTime.Now)
+                var FAAClist = context.FailedAccessAttemptCounters.Where(faac => (faac.Login == loginData.Username)).ToList();
+                var FAAC = FAAClist.Count == 0 ? null : FAAClist[0];
+                TimeSpan MinutesLeft;
+                if (FAAC != null) {
+                    MinutesLeft = FAAC.LastFailedAccessAttempt.AddMinutes(DefaultLockoutTimeSpanMin).Subtract(DateTime.Now); 
+                    if (MinutesLeft.Minutes > 30)
                         FAAC.FailedAccessAttemptCount = 0;
                     else if (FAAC.FailedAccessAttemptCount > MaxFailedAccessAttempts)
                     {
-                        ModelState.AddModelError("ErrorLogin", "Превышено количество попыток входа, попробуйте через " + DefaultLockoutTimeSpanMin + " минут" );
+                        ModelState.AddModelError("ErrorLogin", "Превышено количество попыток входа. Осталось минут до конца блокировки: " + MinutesLeft.Minutes);
                         return Page();
                     }
+                }
 
                 if ((loggingUser.Count != 1) || !(HashHelper.VerifyHash(loginData.Password, HashAlgorithm, loggingUser[0].Password)))
                 {
@@ -64,14 +69,16 @@ namespace PasswordManager.Pages
                             FailedAccessAttemptCount = 1,
                             LastFailedAccessAttempt = DateTime.Now
                         });
+                        await context.SaveChangesAsync();
                     }
                     else
                     {
                         FAAC.FailedAccessAttemptCount++;
                         FAAC.LastFailedAccessAttempt = DateTime.Now;
-                        context.FailedAccessAttemptCounters.Update(FAAC);
+                        context.Attach(FAAC).State = EntityState.Modified;
+                        await context.SaveChangesAsync();
                     }
-                    ModelState.AddModelError("ErrorLogin", "Неверный логин или пароль");
+                    ModelState.AddModelError("ErrorLogin", "Неверный логин или пароль. У вас осталось "  + (MaxFailedAccessAttempts - FAAC.FailedAccessAttemptCount) + " попытки.");
                     return Page();
                 }
                 if (FAAC != null)

@@ -12,7 +12,28 @@
     <tbody>
         @foreach (var user in Model.Users)
         {
-            <tr><td>@user.Id</td><td>@user.Login</td><td>@user.Password</td></tr>
+            <tr>
+                <td>@user.Id</td>
+                <td>@user.Login</td>
+                <td>@user.Password</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                            Действия<span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li class="list-group-item">
+                                <form method="post">
+                                    <button class="btn btn-primary" id="confirmDelete" type="submit" asp-page-handler="delete" asp-route-id="@user.Id">
+                                        Удалить
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                </td>
+            </tr>
         }
     </tbody>
 </table>

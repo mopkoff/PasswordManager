@@ -85,9 +85,9 @@ namespace PasswordManager
             app.Use(async (context, next) =>
             {
                 //Если обнаружена xss-атака, браузер удалит опасные фрагменты 
-                context.Response.Headers.Add("x-xss-protection", "1");                
+                context.Response.Headers.Add("x-xss-protection", "1");
                 //Разрешение запуска скриптов только с текущего сайта
-                context.Response.Headers.Add("content-security-policy", "script-src 'self'");
+                context.Response.Headers.Add("content-security-policy", "default-src 'self' ajax.aspnetcdn.com");
                 //Блокировка фреймов
                 context.Response.Headers.Add("X-Frame-Options", "DENY");
                 //Проверка загружаемых файлов
@@ -99,11 +99,11 @@ namespace PasswordManager
 
                 await next();
             });
-            
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-            
+
             app.UseAuthentication();
             app.UseMvc();
 

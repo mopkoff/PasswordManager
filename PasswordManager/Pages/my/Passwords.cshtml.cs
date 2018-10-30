@@ -16,7 +16,7 @@ namespace PasswordManager.Pages.my
     public class PasswordsModel : PageModel
     {
         private readonly ApplicationContext _context;
-        public List<Account> Accounts{ get; set; }
+        public List<Account> Accounts { get; set; }
         public string ContextUser { get; set; }
         private User CurrentUser;
         private EncryptHelper encryptHelper;

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace PasswordManager.Pages.my
 {
@@ -31,8 +33,19 @@ namespace PasswordManager.Pages.my
             else
                 Users = _context.Users.AsNoTracking().Where(user => user.Login == HttpContext.User.Identity.Name).ToList();
 
+        }
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
+        {
+            var user = await _context.Users.FindAsync(id);
 
+            await HttpContext.SignOutAsync();
+            if (user != null)
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+            }
 
+            return RedirectToPage("Users");
         }
     }
 }
